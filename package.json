@@ -1,0 +1,13 @@
+{
+  "name": "nutty-command",
+  "version": "0.0.1",
+  "description": "A command middleware for nutty",
+  "main": "index.js",
+  "repository": { "type": "git", "url": "https://github.com/nuttyjs/nutty-command.git" },
+  "keywords": [ "cmd", "command", "nutty", "nuttyjs", "middleware", "arguments", "args", "cli" ],
+  "author": "Josemi Juanes <josemijuanes@gmail.com>",
+  "homepage": "https://github.com/nuttyjs/nutty-command",
+  "license": "MIT",
+  "dependencies": { },
+  "devDependencies": { "nutty": "0.2.0" }
+}
