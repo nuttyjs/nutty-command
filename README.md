@@ -33,7 +33,7 @@ command_test.option({ name: 'upperCase', detail: 'Print the message in upper cas
 command_test.callback(function(args, body)
 {
   //Check the upperCase option
-  if(args.options.upperCase === true)
+  if(args.options.upperCase !== false)
   {
     //Get the message in upper case
     args.options.msg = args.options.msg.toUpperCase();
