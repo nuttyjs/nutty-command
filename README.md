@@ -47,7 +47,7 @@ command_test.callback(function(args, body)
 nutty.use(command_test.build());
 
 //No command provided
-nutty.use(function(args, body, next){ return nutty.display.error('No command provided'); });
+nutty.use(function(args, body, next){ return console.error('No command provided'); });
 
 //Run the CLI
 nutty.run();
