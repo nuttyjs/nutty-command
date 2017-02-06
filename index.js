@@ -1,5 +1,5 @@
 //Import dependencies
-var parse_type = require('./lib/parse-type.js');
+var util = require('nutty-util');
 
 //Command wrapper
 var command = function(name, detail)
@@ -62,16 +62,16 @@ command.prototype.build = function()
   var self = this;
 
   //Return the middleware function
-  return function(args, opt, next)
+  return function(args, body, next)
   {
     //Check for undefined callback
     if(typeof self._callback !== 'function'){ return next(); }
 
     //Check the first argument
-    if(args[0] !== self._name){ return next(); }
+    if(args.arguments[0] !== self._name){ return next(); }
 
     //Remove the first argument
-    args.shift();
+    //args.shift();
 
     //Read all the options
     for(var i = 0; i < self._options.length; i++)
@@ -80,21 +80,27 @@ command.prototype.build = function()
       var option = self._options[i];
 
       //Chek if is not used
-      if(typeof opt[option.name] === 'undefined')
+      if(typeof args.options[option.name] === 'undefined')
       {
         //Set the default value
-        if(typeof option.default !== 'undefined'){ opt[option.name] = option.default; }
+        if(typeof option.default !== 'undefined'){ args.options[option.name] = option.default; }
 
         //Continue
         continue;
       }
 
-      //Parse the option
-      opt[option.name] = parse_type(opt[option.name], option.type);
+      //Check for boolean
+      if(option.type === 'boolean'){ args.options[option.name] = util.parse.bool(args.options[option.name]); }
+
+      //Check for integer
+      else if(option.type === 'integer'){ args.options[option.name] = util.parse.int(args.options[option.name]); }
+
+      //Check for number
+      else if(option.type === 'number'){ args.options[option.name] = util.parse.number(args.options[option.name]); }
     }
 
     //Do the callback
-    return self._callback(args, opt);
+    return self._callback(args, body);
   };
 };
 
