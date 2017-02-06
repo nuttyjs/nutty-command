@@ -1,6 +1,6 @@
 {
   "name": "nutty-command",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A command middleware for nutty",
   "main": "index.js",
   "repository": { "type": "git", "url": "https://github.com/nuttyjs/nutty-command.git" },
@@ -8,6 +8,6 @@
   "author": "Josemi Juanes <josemijuanes@gmail.com>",
   "homepage": "https://github.com/nuttyjs/nutty-command",
   "license": "MIT",
-  "dependencies": { },
-  "devDependencies": { "nutty": "0.2.0" }
+  "dependencies": { "nutty-log": "0.0.6", "nutty-util": "0.0.1" },
+  "devDependencies": { "nutty": "0.2.2" }
 }
