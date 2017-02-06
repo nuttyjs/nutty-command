@@ -2,6 +2,7 @@
 
 [![npm](https://img.shields.io/npm/v/nutty-command.svg?style=flat-square)](https://www.npmjs.com/package/nutty-command)
 [![npm](https://img.shields.io/npm/dt/nutty-command.svg?style=flat-square)](https://www.npmjs.com/package/nutty-command)
+[![npm](https://img.shields.io/npm/l/nutty-command.svg?style=flat-square)](https://github.com/nuttyjs/nutty-command)
 
 > A command middleware for nutty
 
@@ -25,29 +26,28 @@ nutty.set('name', 'my-app');
 var command_test = new command('test', 'Test the CLI');
 
 //Add the options
-command_test.option({ name: 'msg', detail: 'Print a message', type: 'string', default: 'No message' });
-command_test.option({ name: 'upperCase', detail: 'Print the message in upper case', type: 'boolean', default: false });
+command_test.option({ name: 'msg', detail: 'Print a message', default: 'No message' });
+command_test.option({ name: 'upperCase', detail: 'Print the message in upper case', default: false });
 
 //Add the callback function
-command_test.callback(function(args, opt)
+command_test.callback(function(args, body)
 {
   //Check the upperCase option
-  //opt.upperCase will be a boolean because the option type is set to boolean
-  if(opt.upperCase === true)
+  if(args.options.upperCase === true)
   {
     //Get the message in upper case
-    opt.msg = opt.msg.toUpperCase();
+    args.options.msg = args.options.msg.toUpperCase();
   }
 
   //Print the test message
-  console.log('Message: ' + opt.msg);
+  console.log('Message: ' + args.options.msg);
 });
 
 //Add the test command
 nutty.use(command_test.build());
 
 //No command provided
-nutty.use(function(args, opt, next){ return nutty.display.error('No command provided'); });
+nutty.use(function(args, body, next){ return nutty.display.error('No command provided'); });
 
 //Run the CLI
 nutty.run();
@@ -69,7 +69,7 @@ Message: This is my message
 
 //Add with the upper case option
 ```
-my-app test --msg "My test message" --upperCase yes
+my-app test --msg "My test message" --upperCase
 Message: MY TEST MESSAGE
 ```
 
@@ -80,8 +80,14 @@ Message: MY TEST MESSAGE
 
 Generate a new command object. The constructor accepts two arguments:
 
-- `name`: a string with the command name.
+- `name`: a string with the command name. If the first argument of the CLI matches this string, then the callback function provided will be invoked.
 - `description`: a string with the command description.
+
+Example:
+
+```javascript
+var cmd = new command('test', 'Test the CLI');
+```
 
 ### cmd.option(obj)
 
@@ -89,40 +95,32 @@ Add a new option parser for this command. The object must have the following key
 
 - `name`: a string with the option name (**mandatory**).
 - `detail`: a string with the option detail.
-- `type`: a string with the option type. It can be: `string`, `boolean`, `number` or `integer`. If not used, the default option type is `string`.
 - `default`: the option default value.
-
-### cmd.callback(fn)
-
-The function that will be invoked if the user runs this command. This function will be called with the following values:
-
-#### arguments
-An array with the arguments that didn't have an option associated with them. This is the same list that is passed to the nutty's middlewares, but without the first argument (because is used associated with the command).
-
-#### options
-
-An object with all the options with the format `key = value`.
-
-It is the same object passed to the nutty's middlewares, but with the difference that all the options that matches with the options provided in `cmd.option` will be parsed and converted to the provided type.
 
 Example:
 
 ```javascript
-cmd.opt({ name: 'myOpt', type: 'number' });
+//Add an option
+cmd.opt({ name: 'option', detail: 'My option', default: '' });
+```
 
+### cmd.callback(fn)
+
+The function that will be invoked if the user runs this command. This function will be called with the same arguments described [here](https://github.com/nuttyjs/nutty#nuttyusefn), but without the `next` function.
+
+Example:
+
+```javascript
 //Callback
-cmd.callback(function(args, opt)
+cmd.callback(function(args, body)
 {
-  //Check the type of the opt.myOpt variable
-  var type = typeof opt.myOpt; // --> number
-
-  // ...
+  //Do your magic here
 });
 ```
 
 ### cmd.build()
 
-Build the command middleware to be used with the `nutty.use` method.
+Generate the middleware to be used with the `nutty.use` method.
 
 ## License
 
