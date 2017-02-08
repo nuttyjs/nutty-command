@@ -1,6 +1,6 @@
 {
   "name": "nutty-command",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "A command middleware for nutty",
   "main": "index.js",
   "repository": { "type": "git", "url": "https://github.com/nuttyjs/nutty-command.git" },
