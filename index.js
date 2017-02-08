@@ -62,16 +62,13 @@ command.prototype.build = function()
   var self = this;
 
   //Return the middleware function
-  return function(args, body, next)
+  return function(args, next)
   {
     //Check for undefined callback
     if(typeof self._callback !== 'function'){ return next(); }
 
     //Check the first argument
     if(args.arguments[0] !== self._name){ return next(); }
-
-    //Remove the first argument
-    //args.shift();
 
     //Read all the options
     for(var i = 0; i < self._options.length; i++)
@@ -100,7 +97,7 @@ command.prototype.build = function()
     }
 
     //Do the callback
-    return self._callback(args, body);
+    return self._callback(args);
   };
 };
 
